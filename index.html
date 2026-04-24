@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amigo eSIM — Stay Connected Wherever You Travel</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #2563EB;
+      --blue-dark: #1d4ed8;
+      --blue-light: #eff6ff;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --radius: 12px;
+      --shadow: 0 1px 4px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.5;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.35rem; font-weight: 800; color: var(--blue);
+      letter-spacing: -.5px;
+    }
+    .logo span { color: var(--text); }
+
+    nav { display: flex; align-items: center; gap: 28px; }
+
+    nav a {
+      font-size: .9rem; font-weight: 500; color: var(--muted);
+      transition: color .15s;
+    }
+    nav a:hover { color: var(--text); }
+
+    .cart-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font-size: 1.25rem;
+      display: flex; align-items: center; gap: 6px;
+      transition: color .15s;
+    }
+    .cart-btn:hover { color: var(--blue); }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 80px 24px 64px;
+      background: linear-gradient(160deg, #f0f7ff 0%, #fff 60%);
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800; letter-spacing: -.5px;
+      line-height: 1.15; margin-bottom: 16px;
+    }
+
+    .hero p {
+      font-size: 1.1rem; color: var(--muted);
+      max-width: 480px; margin: 0 auto 40px;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      background: var(--blue); color: #fff;
+      font-size: 1rem; font-weight: 600;
+      padding: 14px 32px; border-radius: 8px;
+      transition: background .15s, transform .1s;
+      margin-bottom: 52px;
+    }
+    .hero-cta:hover { background: var(--blue-dark); transform: translateY(-1px); }
+
+    .trust-badges {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
+    }
+
+    .badge {
+      display: flex; align-items: center; gap: 8px;
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 40px; padding: 8px 16px;
+      font-size: .82rem; font-weight: 600; color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    .badge .icon { font-size: 1rem; }
+
+    /* ── SECTION WRAPPER ── */
+    section { padding: 64px 24px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-title {
+      font-size: 1.65rem; font-weight: 800; margin-bottom: 8px;
+    }
+    .section-sub { color: var(--muted); margin-bottom: 36px; }
+
+    /* ── DESTINATION PICKER ── */
+    #destinations { background: #fff; }
+
+    .tabs {
+      display: flex; gap: 4px;
+      background: #f3f4f6; border-radius: 10px;
+      padding: 4px; width: fit-content; margin-bottom: 32px;
+    }
+
+    .tab-btn {
+      background: none; border: none; cursor: pointer;
+      padding: 8px 24px; border-radius: 8px;
+      font-size: .9rem; font-weight: 600; color: var(--muted);
+      transition: background .15s, color .15s;
+    }
+    .tab-btn.active {
+      background: #fff; color: var(--blue);
+      box-shadow: 0 1px 4px rgba(0,0,0,.1);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .dest-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
+    }
+
+    .dest-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px 16px;
+      text-align: center; cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform .15s, box-shadow .15s, border-color .15s;
+    }
+    .dest-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(37,99,235,.12);
+      border-color: var(--blue);
+    }
+
+    .dest-flag { font-size: 2.4rem; margin-bottom: 8px; display: block; }
+    .dest-name { font-size: .88rem; font-weight: 700; margin-bottom: 4px; }
+    .dest-price { font-size: .82rem; color: var(--blue); font-weight: 600; }
+
+    .view-all {
+      display: inline-block; margin-top: 24px;
+      color: var(--blue); font-weight: 600; font-size: .9rem;
+      border-bottom: 1px solid transparent;
+      transition: border-color .15s;
+    }
+    .view-all:hover { border-color: var(--blue); }
+
+    /* ── POPULAR PLANS ── */
+    #plans { background: #f9fafb; }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .plan-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px 20px;
+      box-shadow: var(--shadow);
+      display: flex; flex-direction: column; gap: 12px;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .plan-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(37,99,235,.12);
+    }
+
+    .plan-header { display: flex; align-items: center; gap: 10px; }
+    .plan-flag { font-size: 1.8rem; }
+    .plan-dest { font-weight: 700; font-size: 1rem; }
+
+    .plan-specs {
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .spec-tag {
+      background: var(--blue-light); color: var(--blue);
+      font-size: .75rem; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px;
+    }
+
+    .plan-price {
+      font-size: 1.6rem; font-weight: 800; color: var(--text);
+    }
+    .plan-price span { font-size: .85rem; font-weight: 500; color: var(--muted); }
+
+    .buy-btn {
+      display: block; width: 100%;
+      background: var(--blue); color: #fff;
+      border: none; border-radius: 8px;
+      padding: 11px; font-size: .9rem; font-weight: 700;
+      cursor: pointer; margin-top: auto;
+      transition: background .15s, transform .1s;
+    }
+    .buy-btn:hover { background: var(--blue-dark); transform: translateY(-1px); }
+
+    /* ── HOW IT WORKS ── */
+    #how { background: #fff; }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .step {
+      text-align: center; padding: 32px 24px;
+      border: 1px solid var(--border); border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .step-num {
+      width: 48px; height: 48px;
+      background: var(--blue); color: #fff;
+      border-radius: 50%; font-size: 1.25rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .step-icon { font-size: 2rem; margin-bottom: 12px; }
+    .step h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .step p { font-size: .87rem; color: var(--muted); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #111827; color: #9ca3af;
+      padding: 48px 24px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 32px; margin-bottom: 40px;
+    }
+
+    .footer-logo {
+      font-size: 1.35rem; font-weight: 800; color: #fff;
+      letter-spacing: -.5px; margin-bottom: 10px; display: block;
+    }
+    .footer-logo span { color: #60a5fa; }
+    .footer-tagline { font-size: .85rem; line-height: 1.6; }
+
+    .footer-col h4 {
+      color: #fff; font-size: .85rem; font-weight: 700;
+      margin-bottom: 14px; text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-col li a { font-size: .85rem; transition: color .15s; }
+    .footer-col li a:hover { color: #fff; }
+
+    .footer-bottom {
+      border-top: 1px solid #1f2937;
+      padding-top: 24px; text-align: center;
+      font-size: .8rem;
+    }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: #111827; color: #fff;
+      padding: 12px 24px; border-radius: 8px;
+      font-size: .9rem; font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0,0,0,.2);
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s, transform .25s;
+      white-space: nowrap; z-index: 9999;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { gap: 16px; }
+      nav a { display: none; }
+      nav a.show-mobile { display: inline; }
+
+      .hero { padding: 52px 20px 48px; }
+
+      .dest-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .plans-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .steps { grid-template-columns: 1fr; gap: 16px; }
+
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 24px; }
+    }
+
+    @media (max-width: 480px) {
+      .plans-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <a href="#" class="logo">amigo<span>eSIM</span></a>
+  <nav>
+    <a href="#destinations">Destinations</a>
+    <a href="#destinations">Regions</a>
+    <a href="#how">Help</a>
+    <button class="cart-btn" aria-label="Cart">
+      🛒
+    </button>
+  </nav>
+</header>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <h1>Stay Connected<br>Wherever You Travel</h1>
+  <p>Instant eSIM activation with no roaming fees — in 190+ countries around the world.</p>
+  <a href="#destinations" class="hero-cta">Find Your Plan</a>
+
+  <div class="trust-badges">
+    <div class="badge"><span class="icon">⚡</span> Easy Setup</div>
+    <div class="badge"><span class="icon">🚫</span> No Roaming Fees</div>
+    <div class="badge"><span class="icon">🌐</span> 190+ Countries</div>
+    <div class="badge"><span class="icon">✅</span> Money-Back Guarantee</div>
+  </div>
+</div>
+
+<!-- ── DESTINATION PICKER ── -->
+<section id="destinations">
+  <div class="section-inner">
+    <h2 class="section-title">Pick Your Destination</h2>
+    <p class="section-sub">Select a country, region, or go global.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" role="tab" data-tab="local">Local</button>
+      <button class="tab-btn" role="tab" data-tab="regional">Regional</button>
+      <button class="tab-btn" role="tab" data-tab="global">Global</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-local">
+      <div class="dest-grid">
+        <div class="dest-card" onclick="showToast('France')">
+          <span class="dest-flag">🇫🇷</span>
+          <div class="dest-name">France</div>
+          <div class="dest-price">From $6</div>
+        </div>
+        <div class="dest-card" onclick="showToast('Spain')">
+          <span class="dest-flag">🇪🇸</span>
+          <div class="dest-name">Spain</div>
+          <div class="dest-price">From $6</div>
+        </div>
+        <div class="dest-card" onclick="showToast('USA')">
+          <span class="dest-flag">🇺🇸</span>
+          <div class="dest-name">USA</div>
+          <div class="dest-price">From $6</div>
+        </div>
+        <div class="dest-card" onclick="showToast('UK')">
+          <span class="dest-flag">🇬🇧</span>
+          <div class="dest-name">UK</div>
+          <div class="dest-price">From $6</div>
+        </div>
+        <div class="dest-card" onclick="showToast('Italy')">
+          <span class="dest-flag">🇮🇹</span>
+          <div class="dest-name">Italy</div>
+          <div class="dest-price">From $6</div>
+        </div>
+        <div class="dest-card" onclick="showToast('Turkey')">
+          <span class="dest-flag">🇹🇷</span>
+          <div class="dest-name">Turkey</div>
+          <div class="dest-price">From $11</div>
+        </div>
+        <div class="dest-card" onclick="showToast('Australia')">
+          <span class="dest-flag">🇦🇺</span>
+          <div class="dest-name">Australia</div>
+          <div class="dest-price">From $6</div>
+        </div>
+        <div class="dest-card" onclick="showToast('China')">
+          <span class="dest-flag">🇨🇳</span>
+          <div class="dest-name">China</div>
+          <div class="dest-price">From $16</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-regional">
+      <div class="dest-grid">
+        <div class="dest-card" onclick="showToast('Europe')">
+          <span class="dest-flag">🌍</span>
+          <div class="dest-name">Europe</div>
+          <div class="dest-price">From $6</div>
+        </div>
+        <div class="dest-card" onclick="showToast('Asia')">
+          <span class="dest-flag">🌏</span>
+          <div class="dest-name">Asia</div>
+          <div class="dest-price">From $8</div>
+        </div>
+        <div class="dest-card" onclick="showToast('Africa')">
+          <span class="dest-flag">🌍</span>
+          <div class="dest-name">Africa</div>
+          <div class="dest-price">From $27</div>
+        </div>
+        <div class="dest-card" onclick="showToast('Latin America')">
+          <span class="dest-flag">🌎</span>
+          <div class="dest-name">Latin America</div>
+          <div class="dest-price">From $15</div>
+        </div>
+        <div class="dest-card" onclick="showToast('North America')">
+          <span class="dest-flag">🌎</span>
+          <div class="dest-name">North America</div>
+          <div class="dest-price">From $17</div>
+        </div>
+        <div class="dest-card" onclick="showToast('Middle East')">
+          <span class="dest-flag">🌍</span>
+          <div class="dest-name">Middle East</div>
+          <div class="dest-price">From $11</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-global">
+      <div class="dest-grid" style="max-width: 200px;">
+        <div class="dest-card" onclick="showToast('World')">
+          <span class="dest-flag">🌐</span>
+          <div class="dest-name">World</div>
+          <div class="dest-price">From $25</div>
+        </div>
+      </div>
+    </div>
+
+    <a href="#" class="view-all">View all destinations →</a>
+  </div>
+</section>
+
+<!-- ── POPULAR PLANS ── -->
+<section id="plans">
+  <div class="section-inner">
+    <h2 class="section-title">Popular Plans</h2>
+    <p class="section-sub">Our most-loved eSIM packages, ready to activate instantly.</p>
+
+    <div class="plans-grid">
+
+      <div class="plan-card">
+        <div class="plan-header">
+          <span class="plan-flag">🌍</span>
+          <div class="plan-dest">Europe</div>
+        </div>
+        <div class="plan-specs">
+          <span class="spec-tag">5 GB</span>
+          <span class="spec-tag">30 days</span>
+          <span class="spec-tag">39 countries</span>
+        </div>
+        <div class="plan-price">$9 <span>/ plan</span></div>
+        <button class="buy-btn" onclick="showToast('Buying Europe 5GB plan')">Buy Now</button>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-header">
+          <span class="plan-flag">🇺🇸</span>
+          <div class="plan-dest">USA</div>
+        </div>
+        <div class="plan-specs">
+          <span class="spec-tag">10 GB</span>
+          <span class="spec-tag">14 days</span>
+          <span class="spec-tag">Unlimited calls</span>
+        </div>
+        <div class="plan-price">$12 <span>/ plan</span></div>
+        <button class="buy-btn" onclick="showToast('Buying USA 10GB plan')">Buy Now</button>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-header">
+          <span class="plan-flag">🌏</span>
+          <div class="plan-dest">Asia</div>
+        </div>
+        <div class="plan-specs">
+          <span class="spec-tag">3 GB</span>
+          <span class="spec-tag">7 days</span>
+          <span class="spec-tag">15 countries</span>
+        </div>
+        <div class="plan-price">$8 <span>/ plan</span></div>
+        <button class="buy-btn" onclick="showToast('Buying Asia 3GB plan')">Buy Now</button>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-header">
+          <span class="plan-flag">🇬🇧</span>
+          <div class="plan-dest">UK</div>
+        </div>
+        <div class="plan-specs">
+          <span class="spec-tag">5 GB</span>
+          <span class="spec-tag">30 days</span>
+          <span class="spec-tag">4G LTE</span>
+        </div>
+        <div class="plan-price">$9 <span>/ plan</span></div>
+        <button class="buy-btn" onclick="showToast('Buying UK 5GB plan')">Buy Now</button>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-header">
+          <span class="plan-flag">🇯🇵</span>
+          <div class="plan-dest">Japan</div>
+        </div>
+        <div class="plan-specs">
+          <span class="spec-tag">10 GB</span>
+          <span class="spec-tag">30 days</span>
+          <span class="spec-tag">5G Ready</span>
+        </div>
+        <div class="plan-price">$14 <span>/ plan</span></div>
+        <button class="buy-btn" onclick="showToast('Buying Japan 10GB plan')">Buy Now</button>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-header">
+          <span class="plan-flag">🌐</span>
+          <div class="plan-dest">Global</div>
+        </div>
+        <div class="plan-specs">
+          <span class="spec-tag">5 GB</span>
+          <span class="spec-tag">30 days</span>
+          <span class="spec-tag">190+ countries</span>
+        </div>
+        <div class="plan-price">$25 <span>/ plan</span></div>
+        <button class="buy-btn" onclick="showToast('Buying Global 5GB plan')">Buy Now</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section id="how">
+  <div class="section-inner">
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-sub">Get connected in three simple steps.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-icon">📱</div>
+        <h3>Pick a Plan</h3>
+        <p>Choose your destination and the data package that fits your trip — local, regional, or global.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-icon">📷</div>
+        <h3>Scan the QR Code</h3>
+        <p>After purchase, scan the QR code in your phone's eSIM settings to install your plan in seconds.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-icon">✈️</div>
+        <h3>Connect on Arrival</h3>
+        <p>Land, switch on your eSIM, and enjoy fast local data from the moment you touch down.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <span class="footer-logo">amigo<span>eSIM</span></span>
+        <p class="footer-tagline">Your travel companion for seamless global connectivity. eSIMs for 190+ countries, delivered instantly.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Help & Support</h4>
+        <ul>
+          <li><a href="#">Getting Started</a></li>
+          <li><a href="#">Device Compatibility</a></li>
+          <li><a href="#">Installation Guide</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Refund Policy</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="#">support@amigoesim.com</a></li>
+          <li><a href="#">Live Chat</a></li>
+          <li><a href="#">Twitter / X</a></li>
+          <li><a href="#">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 AmigoeSIM. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<!-- ── TOAST ── -->
+<div id="toast"></div>
+
+<script>
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + target).classList.add('active');
+    });
+  });
+
+  // Toast notification
+  let toastTimer;
+  function showToast(label) {
+    const toast = document.getElementById('toast');
+    toast.textContent = label.startsWith('Buying')
+      ? label
+      : `View plans for ${label}`;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+</script>
+</body>
+</html>
