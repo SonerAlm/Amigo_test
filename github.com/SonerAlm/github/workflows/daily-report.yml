@@ -1,0 +1,33 @@
+name: Amigo Daily Performance Report
+
+on:
+  schedule:
+    # Runs Mon-Fri at 8:00 AM Istanbul time (UTC+3 = 05:00 UTC)
+    - cron: '0 5 * * 1-5'
+  workflow_dispatch: # lets you trigger it manually from GitHub any time
+
+jobs:
+  run-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run performance report
+        env:
+          WEBSITE_URL: ${{ secrets.WEBSITE_URL }}
+          PAGESPEED_API_KEY: ${{ secrets.PAGESPEED_API_KEY }}
+          GMAIL_SENDER: ${{ secrets.GMAIL_SENDER }}
+          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+          REPORT_RECIPIENT: ${{ secrets.REPORT_RECIPIENT }}
+        run: python run_report.py
