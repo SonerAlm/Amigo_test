@@ -1,39 +1,31 @@
-import os                                                                                                                                            
-  import requests
-  from dotenv import load_dotenv                                                                                                                       
-   
-  load_dotenv()                                                                                                                                        
+import os
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from dotenv import load_dotenv
 
-  SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-  FROM_EMAIL = os.getenv("FROM_EMAIL")
-  REPORT_EMAIL = os.getenv("REPORT_EMAIL", "")                                                                                                         
-   
-  def send_report():                                                                                                                                   
-      report_path = os.path.join(os.path.dirname(__file__), ".tmp", "email_body.html")
-                                                                                                                                                       
-      with open(report_path, "r") as f:
-          html_content = f.read()                                                                                                                      
+load_dotenv()
 
-      recipients = [{"email": r.strip()} for r in REPORT_EMAIL.split(",") if r.strip()]                                                                
-   
-      response = requests.post(                                                                                                                        
-          "https://api.sendgrid.com/v3/mail/send",
-          headers={
-              "Authorization": f"Bearer {SENDGRID_API_KEY}",
-              "Content-Type": "application/json"                                                                                                       
-          },
-          json={                                                                                                                                       
-              "personalizations": [{"to": recipients}],
-              "from": {"email": FROM_EMAIL},
-              "subject": "Amigo eSIM Daily Performance Report",
-              "content": [{"type": "text/html", "value": html_content}]                                                                                
-          }
-      )                                                                                                                                                
+def send_report():
+    gmail_user = os.getenv("GMAIL_USER")
+    gmail_password = os.getenv("GMAIL_APP_PASSWORD")
+    report_emails = [e.strip() for e in os.getenv("REPORT_EMAIL", "").split(",") if e.strip()]
 
-      if response.status_code == 202:                                                                                                                  
-          print("Email sent successfully via SendGrid")
-      else:                                                                                                                                            
-          raise Exception(f"SendGrid error {response.status_code}: {response.text}")
+    report_path = os.path.join(os.path.dirname(__file__), ".tmp", "email_body.html")
+    with open(report_path, "r") as f:
+        html_content = f.read()
 
-  if __name__ == "__main__":                                                                                                                           
-      send_report()
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = "Amigo eSIM Daily Performance Report"
+    msg["From"] = gmail_user
+    msg["To"] = ", ".join(report_emails)
+    msg.attach(MIMEText(html_content, "html"))
+
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        server.starttls()
+        server.login(gmail_user, gmail_password)
+        server.sendmail(gmail_user, report_emails, msg.as_string())
+        print(f"Email sent successfully to {report_emails}")
+
+if __name__ == "__main__":
+    send_report()
