@@ -11,7 +11,9 @@ def send_report():
     gmail_password = os.getenv("GMAIL_APP_PASSWORD")
     report_emails = [e.strip() for e in os.getenv("REPORT_EMAIL", "").split(",") if e.strip()]
 
-    report_path = os.path.join(os.path.dirname(__file__), ".tmp", "email_body.html")
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    report_path = os.path.join(repo_root, ".tmp", "email_body.html")
+
     with open(report_path, "r") as f:
         html_content = f.read()
 
